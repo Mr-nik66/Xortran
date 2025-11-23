@@ -1,0 +1,137 @@
+// FOR
+*LIST SOURCE PROGRAM
+C
+C === MODULO ===
+C
+      INTEGER FUNCTION IMOD(I, J)
+      INTEGER I, J, Q
+      IF (J - 0) 10, 20, 10
+ 10   Q = I / J
+      IMOD = I - Q*J
+ 20   RETURN
+      END
+// DUP
+*DELETE     WS  UA  IMOD
+*STORE      WS  UA  IMOD
+// FOR
+*LIST SOURCE PROGRAM
+C
+C === NEAR INTEGER ===
+C
+      INTEGER FUNCTION NINT(X)
+      REAL X
+C     IF (X .GE. 0.0) GOTO 10
+      IF (X - 0.0) 10, 20, 20
+ 10   NINT = -IFIX(X - 0.5)
+      GOTO 30
+ 20   NINT = IFIX(X + 0.5)
+ 30   RETURN
+      END
+C
+// DUP
+*DELETE     WS  UA  NINT
+*STORE      WS  UA  NINT
+// FOR
+*LIST SOURCE PROGRAM
+C
+C === RELU ACTIVATION + ALPHA ===
+C
+      REAL FUNCTION RELU(X)
+      REAL X, ALPHA
+      ALPHA = 0.01
+C     IF (X .GT. 0.0) GOTO 20
+      IF (X - 0.0) 10, 10, 20
+ 10   RELU = ALPHA * X
+      GOTO 30
+ 20   RELU = X
+ 30   RETURN
+      END
+C
+// DUP    
+*DELETE     WS  UA  RELU
+*STORE      WS  UA  RELU
+// FOR
+*LIST SOURCE PROGRAM
+C
+C === RELU DERIVATIVE ===
+C
+      REAL FUNCTION RELUD(X)
+      REAL X, ALPHA
+      ALPHA = 0.01
+      IF (X - 0.0) 10, 10, 20
+ 10   RELUD = ALPHA
+      GOTO 30
+ 20   RELUD = 1.0
+ 30   RETURN
+      END
+C
+// DUP
+*DELETE     WS  UA  RELUD
+*STORE      WS  UA  RELUD
+// FOR
+*LIST SOURCE PROGRAM
+C
+C === SIGMOID ACTIVATION ===
+C
+      REAL FUNCTION SIGMO(X)
+      REAL X
+      IF (X - 20.0) 10, 10, 30
+ 10   IF ( X + 20.0 ) 40, 20, 20
+ 20   SIGMO = 1.0 / (1.0 + EXP(-X))
+      GOTO 50
+ 30   SIGMO = 1.0
+      GOTO 50
+ 40   SIGMO = 0.0
+ 50   CONTINUE
+      RETURN
+      END
+C
+// DUP
+*DELETE     WS  UA  SIGMO
+*STORE      WS  UA  SIGMO
+// FOR
+*LIST SOURCE PROGRAM
+C
+C === SIGMOID DERIVATIVE ===
+C
+      REAL FUNCTION SIGMD(X)
+      REAL X, S
+      S = SIGMO(X)
+      SIGMD = S * (1.0 - S)
+      RETURN
+      END
+C
+// DUP
+*DELETE     WS  UA  SIGMD
+*STORE      WS  UA  SIGMD
+// FOR
+*LIST SOURCE PROGRAM
+C
+C === TANH ACTIVATION ===
+C
+      REAL FUNCTION TANHA(X)
+      REAL X, EX, EMX
+      EX = EXP(X)
+      EMX = EXP(-X)
+      TANHA = (EX - EMX)/(EX + EMX)
+      RETURN
+      END
+C
+// DUP
+*DELETE     WS  UA  TANHA
+*STORE      WS  UA  TANHA
+// FOR
+*LIST SOURCE PROGRAM
+C
+C === TANH DERIVATIVE ===
+C
+      REAL FUNCTION TANHD(X)
+      REAL X, T, TANH
+      T = TANH(X)
+      TANHD = 1.0 - T * T
+      RETURN
+      END
+C
+// DUP
+*DELETE     WS  UA  TANHD
+*STORE      WS  UA  TANHD
