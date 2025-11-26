@@ -11,23 +11,35 @@ It learns the classic non-linear XOR problem using:
 - Learning rate annealing
 - Sigmoid activation for the output layer
 
+**IBM 1130 version**
+
 For the IBM 1130, the code is written in
 [IBM 1130 FORTRAN language](http://bitsavers.informatik.uni-stuttgart.de/pdf/ibm/1130/lang/C26-5933-3_1130_Fortran_Language_1965.pdf)
 from 1965, the manual for which can be consulted online.
 
+Training the network on the real hardware is expected to take probably around 30
+minutes, however, this couldn’t be measured, as the only IBM 1130 available to
+me is not fully operational. There is no throttling available in SIMH for the
+IBM 1130, so the results are almost instantaneous.
+
+The IBM 1130 requires only 8K of memory, with DMS V2 using about 0.5K, leaving
+7.5K available for the neural network.
+
+**PDP-11 version**
+
 For the PDP-11, the code is written in Fortran 66 for the
 [DEC FORTRAN IV compiler V20](https://bitsavers.org/www.computer.museum.uq.edu.au/RT-11/DEC-11-LRFPA-A-D%20RT-11%20FORTRAN%20Compiler%20and%20Object%20Time%20System%20User%27s%20Manual.pdf)
-from 1974. Execution requires at least 32 kilobytes of memory, most of it for
-RT-11. The PDP-11/34A is suggested as it was the smallest and most affordable
-PDP-11 equipped with an FP11 floating-point processor in the 1970s.
+from 1974.
 
-The training of the 17 parameters should take about three minutes on a real
-PDP-11/34A. In SIMH, setting the throttle to 400K (`set throttle 400K`) provides
-a more realistic execution speed.
+The default settings for SIMH use the original PDP-11/20 from 1970. Later, the
+PDP-11/34A would have typically been used, as it was the smallest and most
+affordable PDP-11 model equipped with an FP11 floating-point processor in the
+late 1970s.
 
-On the IBM 1130, training the network should take much longer - probably close
-to 30mn - although this couldn’t be measured as the only IBM 1130 available to
-me isn’t fully operational.
+The training of the 17 parameters should take a couple minutes on a real
+PDP-11/34A. In SIMH, setting the throttle to 200K (`set throttle 200K`) provides
+a more realistic execution speed. The PDP-11 version requires at least 32
+kilobytes of memory, most of it for RT-11.
 
 ### Output
 
