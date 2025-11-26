@@ -82,14 +82,10 @@ You will need SIMH for both the IBM 1130 and PDP-11 versions.
 
 A log file from the compiler will appear in `out.lst` in the IBM-1130 folder
 
-There is no speed throttling in the simulator. Actual execution speed would
-probably last half an hour.
-
 **PDP-11**
 
-- Start SIMH with `pdp11 boot.ini` inside the folder.
-- At the RT-11 prompt, which should just show a dot, type `XORTRN`. Training the
-  network should take about 3mn to complete.
+- Start SIMH with `pdp11 boot.ini` inside the PDP-11 folder.
+- At the RT-11 prompt, which should just show a dot, type `XORTRN`.
 
 - To build from source:
 
@@ -105,7 +101,7 @@ The compiler will print a `XORTRN.LST` log file inside RT-11.
 
 This project demonstrates that a stock FORTRAN IV environment from the 1960s and
 1970s was sufficient to implement a basic neural network with backpropagation,
-even with punch cards and 16K of core memory. It is both a retro-computing stunt
+even with punch cards and 8K of core memory. It is both a retro-computing stunt
 and a genuine "what-if" historical experiment.
 
 Had XORTRAN existed in 1965, it would have significantly shifted the perception
