@@ -4,12 +4,12 @@ C  CODE RELEASED UNDER THE MIT LICENSE
 C  ------------------------------------------------------
 C  MAIN PROGRAM
 C     COMMON BLOCKS AND TYPE DECLARATIONS
-      DOUBLE PRECISION INPUTS(4,2), TARGETS(4,1)
-      DOUBLE PRECISION W1(2,4), B1(4), W2(4,1), B2(1)
-      DOUBLE PRECISION Z1(4), A1(4), Z2(1), A2(1)
-      DOUBLE PRECISION DELTA1(4), DELTA2(1)
-      DOUBLE PRECISION DW1(2,4), DW2(4,1), DB1(4), DB2(1)
-      DOUBLE PRECISION LOSS, ERROR, LEARNR, DW1UPDT
+      REAL INPUTS(4,2), TARGETS(4,1)
+      REAL W1(2,4), B1(4), W2(4,1), B2(1)
+      REAL Z1(4), A1(4), Z2(1), A2(1)
+      REAL DELTA1(4), DELTA2(1)
+      REAL DW1(2,4), DW2(4,1), DB1(4), DB2(1)
+      REAL LOSS, ERROR, LEARNR, DW1UPDT
       INTEGER EPOCHS, SAMPLES, I, J, EPOCH, EXPLIM
 C
       COMMON /DATA/ INPUTS, TARGETS
@@ -21,21 +21,21 @@ C     CONSTANTS
       EPOCHS = 500
       SAMPLES = 4
       EXPLIM = 10
-      LEARNR = 0.5D0
+      LEARNR = 0.5
 C
 C     DATA
-      INPUTS(1,1)=0.0D0
-      INPUTS(1,2)=0.0D0
-      INPUTS(2,1)=0.0D0
-      INPUTS(2,2)=1.0D0
-      INPUTS(3,1)=1.0D0
-      INPUTS(3,2)=0.0D0
-      INPUTS(4,1)=1.0D0
-      INPUTS(4,2)=1.0D0
-      TARGETS(1,1)=0.0D0
-      TARGETS(2,1)=1.0D0
-      TARGETS(3,1)=1.0D0
-      TARGETS(4,1)=0.0D0
+      INPUTS(1,1)=0.0
+      INPUTS(1,2)=0.0
+      INPUTS(2,1)=0.0
+      INPUTS(2,2)=1.0
+      INPUTS(3,1)=1.0
+      INPUTS(3,2)=0.0
+      INPUTS(4,1)=1.0
+      INPUTS(4,2)=1.0
+      TARGETS(1,1)=0.0
+      TARGETS(2,1)=1.0
+      TARGETS(3,1)=1.0
+      TARGETS(4,1)=0.0
 C
 C     FORMATS
 9000  FORMAT(I5, D20.12)
@@ -47,7 +47,7 @@ C     INITIALIZE WEIGHTS AND BIASES
 C
 C     TRAINING LOOP
       DO 100 EPOCH = 1, EPOCHS
-          LOSS = 0.0D0
+          LOSS = 0.0
           CALL ZEROGR(DW1, DW2, DB1, DB2)
           DO 200 ISAMPLE = 1, SAMPLES
               CALL FORWRD(ISAMPLE)
@@ -69,26 +69,26 @@ C     TRAINING LOOP
  200      CONTINUE
           DO 10 I = 1, 2
             DO 20 J = 1, 4
-                DW1(I,J) = DW1(I,J) / 4.0D0
+                DW1(I,J) = DW1(I,J) / 4.0
    20       CONTINUE
           CALL UPDATE(DW1, DW2, DB1, DB2, LEARNR)
    10     CONTINUE
           DO 30 I = 1, 4
-              DW2(I,1) = DW2(I,1) / 4.0D0
-              DB1(I) = DB1(I) / 4.0D0
+              DW2(I,1) = DW2(I,1) / 4.0
+              DB1(I) = DB1(I) / 4.0
    30     CONTINUE
-          DB2(1) = DB2(1) / 4.0D0
+          DB2(1) = DB2(1) / 4.0
           IF (EPOCH .GT. 350) GOTO 202
           IF (EPOCH .GT. 100) GOTO 201
-          LEARNR = 0.5D0
+          LEARNR = 0.5
           GOTO 203
- 201      LEARNR = 0.1D0
+ 201      LEARNR = 0.1
           GOTO 203
- 202      LEARNR = 0.01D0
+ 202      LEARNR = 0.01
  203      CALL UPDATE(DW1, DW2, DB1, DB2, LEARNR)
-          LOSS = LOSS / DBLE(SAMPLES)
+          LOSS = LOSS / FLOAT(SAMPLES)
           IF (EPOCH .EQ. 1.0) GOTO 204
-          IF (AMOD(DBLE(EPOCH), 100.0) .NE. 0.0) GOTO 205
+          IF (AMOD(FLOAT(EPOCH), 100.0) .NE. 0.0) GOTO 205
  204        WRITE(7,9000) EPOCH, LOSS
  205      CONTINUE
  100  CONTINUE
@@ -114,8 +114,8 @@ C NINT
       END
 C
 C SIGMOI
-      DOUBLE PRECISION FUNCTION SIGMOI(X)
-      DOUBLE PRECISION X
+      REAL FUNCTION SIGMOI(X)
+      REAL X
       IF (X .GT. 20.0) GOTO 30
       IF (X .LT. -20.0) GOTO 40
       SIGMOI = 1.0 / (1.0 + EXP(-X))
@@ -128,46 +128,46 @@ C SIGMOI
       END
 C
 C SIGDRV
-      DOUBLE PRECISION FUNCTION SIGDRV(X)
-      DOUBLE PRECISION X, S, SIGMOI
+      REAL FUNCTION SIGDRV(X)
+      REAL X, S, SIGMOI
       S = SIGMOI(X)
       SIGDRV = S * (1.0 - S)
       RETURN
       END
 C
 C TANHAC
-      DOUBLE PRECISION FUNCTION TANHAC(X)
-      DOUBLE PRECISION X
+      REAL FUNCTION TANHAC(X)
+      REAL X
       TANHAC = TANH(X) 
       RETURN
       END
 C
 C TANHDR
-      DOUBLE PRECISION FUNCTION TANHDR(X)
-      DOUBLE PRECISION X, T, TANH
+      REAL FUNCTION TANHDR(X)
+      REAL X, T, TANH
       T = TANH(X)
-      TANHDR = 1.0D0 - T * T
+      TANHDR = 1.0 - T * T
       RETURN
       END
 C
 C RANDN (GAUSSIAN)
-      DOUBLE PRECISION FUNCTION RANDN(SEED)
+      REAL FUNCTION RANDN(SEED)
       INTEGER SEED
       INTEGER I
-      DOUBLE PRECISION SUM
-      SUM = 0.0D0
+      REAL SUM
+      SUM = 0.0
       DO 10 i = 1, 12
           SUM = SUM + RAN(1, SEED + I)
 10    CONTINUE
-      RANDN = SUM - 6.0D0
+      RANDN = SUM - 6.0
       RETURN
       END
 C
 C RELU
-      DOUBLE PRECISION FUNCTION RELU(X)
-      DOUBLE PRECISION X, ALPHA
-      DOUBLE PRECISION ALPHA = 0.01D0
-      IF (X .GT. 0.0D0) GOTO 10
+      REAL FUNCTION RELU(X)
+      REAL X, ALPHA
+      REAL ALPHA = 0.01
+      IF (X .GT. 0.0) GOTO 10
       RELU = ALPHA * X
       GOTO 20
 10    RELU = X
@@ -175,23 +175,23 @@ C RELU
       END
 C      
 C RELUDRV
-      DOUBLE PRECISION FUNCTION RELUDRV(X)
-      DOUBLE PRECISION X, ALPHA
-      DOUBLE PRECISION ALPHA = 0.01D0
-      IF (X .GT. 0.0D0) GOTO 10
+      REAL FUNCTION RELUDRV(X)
+      REAL X, ALPHA
+      REAL ALPHA = 0.01
+      IF (X .GT. 0.0) GOTO 10
       RELUDRV = ALPHA
       GOTO 20
-10    RELUDRV = 1.0D0
+10    RELUDRV = 1.0
 20    RETURN
       END
 C      
 C INITWE
       SUBROUTINE INITWE
-      DOUBLE PRECISION W1(2,4), B1(4), W2(4,1), B2(1)
+      REAL W1(2,4), B1(4), W2(4,1), B2(1)
       COMMON /WGHTS/ W1, B1, W2, B2
       INTEGER I, J
-      HESCAL1 = SQRT(2.0D0 / DBLE(2 + 4))
-      HESCAL2 = SQRT(2.0D0 / DBLE(4 + 1))
+      HESCAL1 = SQRT(2.0 / FLOAT(2 + 4))
+      HESCAL2 = SQRT(2.0 / FLOAT(4 + 1))
       DO 10 I = 1, 2
           DO 20 J = 1, 4
               W1(I,J) = RANDN(1234 + I + J) * HESCAL1
@@ -200,14 +200,14 @@ C9003          FORMAT(D20.12)
  20       CONTINUE
  10   CONTINUE
       DO 30 I = 1, 4
-C           B2(1) = RAN(1, 4000) * 0.01D0
+C           B2(1) = RAN(1, 4000) * 0.01
            B1(I) = 0
  30   CONTINUE
       DO 40 I = 1, 4
            W2(I,1) = RANDN(4321 + I ) * HESCAL2
  40   CONTINUE
  9000 FORMAT(A, D20.12)
-C      B2(1) = RAN(1, 4000) * 0.01D0
+C      B2(1) = RAN(1, 4000) * 0.01
       B2(1) = 0
       RETURN
       END
@@ -218,13 +218,13 @@ C FORWRD
       COMMON /LAYER/ Z1(4), A1(4), Z2(1), A2(1)
       COMMON /DATA/ INPUTS(4,2), TARGETS(4,1)
       INTEGER I, J, ISAMPLE
-      DOUBLE PRECISION W1, B1, W2, B2
-      DOUBLE PRECISION Z1, A1, Z2, A2, INPUTS, TARGETS
-      DOUBLE PRECISION TEMP
+      REAL W1, B1, W2, B2
+      REAL Z1, A1, Z2, A2, INPUTS, TARGETS
+      REAL TEMP
 C
 C     LAYER 1
       DO 1000 I = 1, 4
-          Z1(I) = 0.0D0
+          Z1(I) = 0.0
           DO 2000 J = 1, 2
               TEMP = INPUTS(ISAMPLE,J) * W1(J,I)
               Z1(I) = Z1(I) + TEMP
@@ -236,7 +236,7 @@ C      RELU ACTIVATION
 1000  CONTINUE
 C
 C     LAYER 2
-      Z2(1) = 0.0D0
+      Z2(1) = 0.0
       DO 3000 J = 1, 4
           Z2(1) = Z2(1) + A1(J) * W2(J,1)
 3000  CONTINUE
@@ -249,9 +249,9 @@ C     ACTIVATION
 C
 C UPDATE
       SUBROUTINE UPDATE(DW1, DW2, DB1, DB2, LR)
-      DOUBLE PRECISION DW1(2,4), DW2(4,1), DB1(4), DB2(1), LR
+      REAL DW1(2,4), DW2(4,1), DB1(4), DB2(1), LR
       COMMON /WGHTS/ W1(2,4), B1(4), W2(4,1), B2(1)
-      DOUBLE PRECISION W1, B1, W2, B2
+      REAL W1, B1, W2, B2
       INTEGER I, J
       DO 10 I = 1, 4
           W2(I,1) = W2(I,1) + LR * DW2(I,1)
@@ -270,7 +270,7 @@ C UPDATE
 C
 C ZEROGR
       SUBROUTINE ZEROGR(DW1, DW2, DB1, DB2)
-      DOUBLE PRECISION DW1(2,4), DW2(4,1), DB1(4), DB2(1)
+      REAL DW1(2,4), DW2(4,1), DB1(4), DB2(1)
       INTEGER I, J
       DO 10 I = 1, 2
           DO 20 J = 1, 4
