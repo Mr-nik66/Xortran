@@ -22,8 +22,8 @@ minutes, however, this couldn’t be measured, as the only IBM 1130 available to
 me is not fully operational. There is no throttling available in SIMH for the
 IBM 1130, so the results are almost instantaneous.
 
-The IBM 1130 requires only 8K of memory, with DMS V2 using about 0.5K, leaving
-7.5K available for the neural network.
+The IBM 1130 version requires only 8K of memory, with DMS V2 using about 0.5K,
+leaving 7.5K available for the neural network.
 
 **PDP-11 version**
 
@@ -69,7 +69,7 @@ EPOCH 500 LOSS 0.000411985442 LR 0.188574
 
 You will need SIMH for both the IBM 1130 and PDP-11 versions.
 
-### IBM 1130
+**IBM 1130**
 
 - Start SIMH with `ibm1130 boot.ini` inside the IBM-1130 folder. Some
   distributions don't include it in the SIMH package, you will then need to
@@ -85,7 +85,7 @@ A log file from the compiler will appear in `out.lst` in the IBM-1130 folder
 There is no speed throttling in the simulator. Actual execution speed would
 probably last half an hour.
 
-### PDP-11
+**PDP-11**
 
 - Start SIMH with `pdp11 boot.ini` inside the folder.
 - At the RT-11 prompt, which should just show a dot, type `XORTRN`. Training the
@@ -99,7 +99,7 @@ probably last half an hour.
 .RUN XORTRN
 ```
 
-The compiler will print a log file in `XORTRN.LST` inside RT-11.
+The compiler will print a `XORTRN.LST` log file inside RT-11.
 
 ## Background
 
