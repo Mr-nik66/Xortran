@@ -22,7 +22,7 @@ minutes, however, this couldn’t be measured, as the only IBM 1130 available to
 me is not fully operational. There is no throttling available in SIMH for the
 IBM 1130, so the results are almost instantaneous.
 
-The IBM 1130 version requires only 8K of memory, with DMS V2 using about 0.5K,
+The IBM 1130 version requires 8K of memory, with DMS V2 using about 0.5K,
 leaving 7.5K available for the neural network.
 
 **PDP-11 version**
@@ -38,8 +38,8 @@ late 1970s.
 
 The training of the 17 parameters should take a couple minutes on a real
 PDP-11/34A. In SIMH, setting the throttle to 200K (`set throttle 200K`) provides
-a more realistic execution speed. The PDP-11 version requires at least 32
-kilobytes of memory, most of it for RT-11.
+a more realistic execution speed. The PDP-11 version requires 32 kilobytes of
+memory, most of it for RT-11.
 
 ### Output
 
@@ -71,7 +71,7 @@ You will need SIMH for both the IBM 1130 and PDP-11 versions.
 
 **IBM 1130**
 
-- Start SIMH with `ibm1130 boot.ini` inside the IBM-1130 folder. Some
+- Start SIMH with `ibm1130 boot.ini` from inside the IBM-1130 folder. Some
   distributions don't include it in the SIMH package, you will then need to
   build it from upstream sources.
 - The `.ini` will automatically:
@@ -84,15 +84,16 @@ A log file from the compiler will appear in `out.lst` in the IBM-1130 folder
 
 **PDP-11**
 
-- Start SIMH with `pdp11 boot.ini` inside the PDP-11 folder.
-- At the RT-11 prompt, which should just show a dot, type `XORTRN`.
+- Start SIMH with `pdp11 boot.ini` from inside the PDP-11 folder
+- RT-11 will automatically start XORTRAN after booting
+- Press `Ctrl + E` then type `q` to exit SIMH
 
 - To build from source:
 
 ```text
 .FORTRAN/LIST:XORTRN.LST XORTRN.FOR
 .LINK XORTRN.OBJ,FORLIB
-.RUN XORTRN
+.R XORTRN
 ```
 
 The compiler will print a `XORTRN.LST` log file inside RT-11.
