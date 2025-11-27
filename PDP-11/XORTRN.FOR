@@ -9,19 +9,19 @@ C     COMMON BLOCKS AND TYPE DECLARATIONS
       REAL Z1(4), A1(4), Z2(1), A2(1)
       REAL DELTA1(4), DELTA2(1)
       REAL DW1(2,4), DW2(4,1), DB1(4), DB2(1)
-      REAL LOSS, ERROR, LEARNR, DW1UPDT
+      REAL LOSS, ERROR, LR, DW1UPDT
       INTEGER EPOCHS, SAMPLES, I, J, EPOCH, EXPLIM
 C
       COMMON /DATA/ INPUTS, TARGETS
       COMMON /WGHTS/ W1, B1, W2, B2
-      COMMON /CONSTS/ EXPLIM, LEARNR
+      COMMON /CONSTS/ EXPLIM, LR
       COMMON /LAYER/ Z1, A1, Z2, A2
 C
 C     CONSTANTS
       EPOCHS = 500
       SAMPLES = 4
       EXPLIM = 10
-      LEARNR = 0.5
+      LR = 0.5
 C
 C     DATA
       INPUTS(1,1)=0.0
@@ -71,7 +71,7 @@ C     TRAINING LOOP
             DO 20 J = 1, 4
                 DW1(I,J) = DW1(I,J) / 4.0
    20       CONTINUE
-          CALL UPDATE(DW1, DW2, DB1, DB2, LEARNR)
+          CALL UPDATE(DW1, DW2, DB1, DB2, LR)
    10     CONTINUE
           DO 30 I = 1, 4
               DW2(I,1) = DW2(I,1) / 4.0
@@ -80,12 +80,12 @@ C     TRAINING LOOP
           DB2(1) = DB2(1) / 4.0
           IF (EPOCH .GT. 350) GOTO 202
           IF (EPOCH .GT. 100) GOTO 201
-          LEARNR = 0.5
+          LR = 0.5
           GOTO 203
- 201      LEARNR = 0.1
+ 201      LR = 0.1
           GOTO 203
- 202      LEARNR = 0.01
- 203      CALL UPDATE(DW1, DW2, DB1, DB2, LEARNR)
+ 202      LR = 0.01
+ 203      CALL UPDATE(DW1, DW2, DB1, DB2, LR)
           LOSS = LOSS / FLOAT(SAMPLES)
           IF (EPOCH .EQ. 1.0) GOTO 204
           IF (AMOD(FLOAT(EPOCH), 100.0) .NE. 0.0) GOTO 205
@@ -93,12 +93,14 @@ C     TRAINING LOOP
  205      CONTINUE
  100  CONTINUE
       WRITE(7, 9001)
+      ITMP1 = NINT(INPUTS(ISAMPLE,2))
+      ITMP2 = NINT(INPUTS(ISAMPLE,2))
+      RTMP1 = REAL(A2(1))
+      RTMP2 = REAL(TARGETS(ISAMPLE,1))
+      R = REAL(TARGETS(ISAMPLE,1))
       DO 600 ISAMPLE = 1, SAMPLES
         CALL FORWRD(ISAMPLE)
-        WRITE(7, 9002) NINT(INPUTS(ISAMPLE,1)), 
-     $  NINT(INPUTS(ISAMPLE,2)), REAL(A2(1)), 
-     $  REAL(TARGETS(ISAMPLE,1))
-C
+        WRITE(7, 9002) ITMP1, ITMP2, RTMP1, RTMP2
  600  CONTINUE
       STOP
       END
