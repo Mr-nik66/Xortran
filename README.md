@@ -88,7 +88,7 @@ A log file from the compiler will appear in `out.lst` in the IBM-1130 folder
 - RT-11 will automatically start XORTRAN after booting
 - Press `Ctrl + E` then type `q` to exit SIMH
 
-- To build from source:
+To build from source:
 
 ```text
 .FORTRAN/LIST:XORTRN.LST XORTRN.FOR
