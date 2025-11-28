@@ -38,14 +38,16 @@ C     DATA
       TARGETS(4,1)=0.0
 C
 C     FORMATS
-9000  FORMAT(I5, D20.12)
-9001  FORMAT(' ')
-9002  FORMAT (2I2, 1X, 'GOT:', F8.6, ' EXPECTED:', F2.0)
+9000  FORMAT(' EPOCH   LOSS(MSE)      LR')
+9001  FORMAT(I5, ' ', F14.12, ' ', F8.6)
+9002  FORMAT(' ')
+9003  FORMAT (I2, I2, ' GOT:', F9.6, ' EXPECTED:', F2.0)
 C
 C     INITIALIZE WEIGHTS AND BIASES
       CALL INITWE
 C
 C     TRAINING LOOP
+      WRITE(7, 9000)
       DO 100 EPOCH = 1, EPOCHS
           LOSS = 0.0
           CALL ZEROGR(DW1, DW2, DB1, DB2)
@@ -78,29 +80,29 @@ C     TRAINING LOOP
               DB1(I) = DB1(I) / 4.0
    30     CONTINUE
           DB2(1) = DB2(1) / 4.0
-          IF (EPOCH .GT. 350) GOTO 202
-          IF (EPOCH .GT. 100) GOTO 201
-          LR = 0.5
-          GOTO 203
- 201      LR = 0.1
-          GOTO 203
- 202      LR = 0.01
+C          IF (EPOCH .GT. 350) GOTO 202
+C          IF (EPOCH .GT. 100) GOTO 201
+C          LR = 0.5
+C          GOTO 203
+C 201      LR = 0.1
+C          GOTO 203
+C 202      LR = 0.01
  203      CALL UPDATE(DW1, DW2, DB1, DB2, LR)
           LOSS = LOSS / FLOAT(SAMPLES)
           IF (EPOCH .EQ. 1.0) GOTO 204
           IF (AMOD(FLOAT(EPOCH), 100.0) .NE. 0.0) GOTO 205
- 204        WRITE(7,9000) EPOCH, LOSS
+ 204        WRITE(7,9001) EPOCH, LOSS, LR
+            LR = LR * 0.85
  205      CONTINUE
  100  CONTINUE
-      WRITE(7, 9001)
-      ITMP1 = NINT(INPUTS(ISAMPLE,2))
-      ITMP2 = NINT(INPUTS(ISAMPLE,2))
-      RTMP1 = REAL(A2(1))
-      RTMP2 = REAL(TARGETS(ISAMPLE,1))
-      R = REAL(TARGETS(ISAMPLE,1))
+      WRITE(7, 9002)
       DO 600 ISAMPLE = 1, SAMPLES
         CALL FORWRD(ISAMPLE)
-        WRITE(7, 9002) ITMP1, ITMP2, RTMP1, RTMP2
+        ITMP1 = NINT(INPUTS(ISAMPLE,1))
+        ITMP2 = NINT(INPUTS(ISAMPLE,2))
+        RTMP1 = A2(1)
+        RTMP2 = TARGETS(ISAMPLE,1)
+        WRITE(7, 9003) ITMP1, ITMP2, RTMP1, RTMP2
  600  CONTINUE
       STOP
       END
@@ -152,23 +154,10 @@ C TANHDR
       RETURN
       END
 C
-C RANDN (GAUSSIAN)
-      REAL FUNCTION RANDN(SEED)
-      INTEGER SEED
-      INTEGER I
-      REAL SUM
-      SUM = 0.0
-      DO 10 i = 1, 12
-          SUM = SUM + RAN(1, SEED + I)
-10    CONTINUE
-      RANDN = SUM - 6.0
-      RETURN
-      END
-C
 C RELU
       REAL FUNCTION RELU(X)
       REAL X, ALPHA
-      REAL ALPHA = 0.01
+      ALPHA = 0.01
       IF (X .GT. 0.0) GOTO 10
       RELU = ALPHA * X
       GOTO 20
@@ -179,7 +168,7 @@ C
 C RELUDRV
       REAL FUNCTION RELUDRV(X)
       REAL X, ALPHA
-      REAL ALPHA = 0.01
+      ALPHA = 0.01
       IF (X .GT. 0.0) GOTO 10
       RELUDRV = ALPHA
       GOTO 20
@@ -189,24 +178,32 @@ C RELUDRV
 C      
 C INITWE
       SUBROUTINE INITWE
-      REAL W1(2,4), B1(4), W2(4,1), B2(1)
+      REAL W1(2,4), B1(4), W2(4,1), B2(1), RND, SEED
       COMMON /WGHTS/ W1, B1, W2, B2
       INTEGER I, J
       HESCAL1 = SQRT(2.0 / FLOAT(2 + 4))
       HESCAL2 = SQRT(2.0 / FLOAT(4 + 1))
+
+      SEED = 887.
       DO 10 I = 1, 2
           DO 20 J = 1, 4
-              W1(I,J) = RANDN(1234 + I + J) * HESCAL1
-C              WRITE(7, 9003) (W1(I,J))
-C9003          FORMAT(D20.12)
+            RND = AMOD(SEED * 7 + 1, 32767.) / 32767.
+            W1(I,J) = (RND - 0.5) * 2.0 * HESCAL1
+            SEED = SEED + 3277.
+C            WRITE(7, 9003) (W1(I,J), SEED)
+C9003        FORMAT(F20.12, F20.12)
  20       CONTINUE
  10   CONTINUE
       DO 30 I = 1, 4
 C           B2(1) = RAN(1, 4000) * 0.01
            B1(I) = 0
  30   CONTINUE
+
+      SEED = 883.
       DO 40 I = 1, 4
-           W2(I,1) = RANDN(4321 + I ) * HESCAL2
+           RND = AMOD(SEED * 7 + 1, 32767.) / 32767.
+           W2(I,1) = (RND - 0.5) * 2.0 * HESCAL2
+           SEED = SEED + 3277.
  40   CONTINUE
  9000 FORMAT(A, D20.12)
 C      B2(1) = RAN(1, 4000) * 0.01
