@@ -47,22 +47,21 @@ After starting, the neural network is trained on the XOR problem. The output
 shows the mean squared loss every 100 epochs along with the current learning
 rate, gradually converging toward the expected XOR outputs.
 
-The final predictions from the forward pass are then displayed.
-
-Output for the IBM 1130:
+The final predictions from the forward pass are then displayed:
 
 ```
-EPOCH   1 LOSS 0.457087696297 LR 0.425000
-EPOCH 100 LOSS 0.306881130556 LR 0.361249
-EPOCH 200 LOSS 0.078406989778 LR 0.307062
-EPOCH 300 LOSS 0.002172688028 LR 0.261002
-EPOCH 400 LOSS 0.000745905681 LR 0.221852
-EPOCH 500 LOSS 0.000411985442 LR 0.188574
- 
- 0 0 GOT 0.003497 EXPECTED 0.
- 0 1 GOT 0.991684 EXPECTED 1.
- 1 0 GOT 0.965385 EXPECTED 1.
- 1 1 GOT 0.014040 EXPECTED 0.
+EPOCH   LOSS(MSE)      LR
+   1 0.407174676657 0.500000
+  20 0.172056317329 0.425000
+  40 0.037466946989 0.361250
+  60 0.003127707168 0.307063
+  80 0.000134866219 0.261003
+ 100 0.000011311530 0.221853
+
+0 0 GOT: 0.002214 EXPECTED:0.
+0 1 GOT: 0.998473 EXPECTED:1.
+1 0 GOT: 0.996942 EXPECTED:1.
+1 1 GOT: 0.004298 EXPECTED:0.
 ```
 
 ## How to run
