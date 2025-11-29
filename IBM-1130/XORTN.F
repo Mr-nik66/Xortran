@@ -33,7 +33,7 @@ C FMT
 9000  FORMAT(' EPOCH   LOSS(MSE)      LR')
 9001  FORMAT(I5, ' ', F14.12, ' ', F8.6)
 9002  FORMAT(' ')
-9003  FORMAT (I2, I2, ' GOT:', F9.6, ' EXPECTED:', F2.0)
+9003  FORMAT (I2, I2, ' GOT:', F8.6, ' EXPECTED:', F2.0)
 C
       CALL INIT
 C
@@ -91,7 +91,7 @@ C TRAINING STATUS
           IF (M - 0) 206, 205, 206
  205      CONTINUE
           WRITE(1,9001) EPOCH, LOSS, R
-          R = R * 0.85
+          R = R * 0.875
  206      CONTINUE
  100  CONTINUE
 C 
@@ -141,15 +141,15 @@ C INIT INPUT AND OUTPUT NEURONS
       TRGT(3,1) = 1.
       TRGT(4,1) = 0.
 C INIT WEIGHTS + BIASES
-      HSCL1 = SQRT(2.0 / FLOAT(2 + 4)) * 0.5
-      HSCL2 = SQRT(2.0 / FLOAT(4 + 1)) * 0.5
+      HSCL1 = SQRT(2.0 / FLOAT(2 + 4))
+      HSCL2 = SQRT(2.0 / FLOAT(4 + 1))
 C
       ISEED = 887
       DO 10 I = 1, 2
           DO 20 J = 1, 4
 C             COULD BE CALLED AN RNG...
               RND = FLOAT(IMOD(ISEED*7+1, 32767)) / 32767.
-              W1(I,J) = (RND - 0.5) * 4.0 * HSCL1
+              W1(I,J) = (RND - 0.5) * 2.0 * HSCL1
               ISEED = ISEED + 3277
 C              WRITE(1, 9003) W1(I,J)
  20       CONTINUE
@@ -161,7 +161,7 @@ C
       ISEED = 883
       DO 40 I = 1, 4
            RND = FLOAT(IMOD(ISEED*7+1, 32767)) / 32767.
-           W2(I,1) = (RND - 0.5) * 4.0 * HSCL2
+           W2(I,1) = (RND - 0.5) * 2.0 * HSCL2
            ISEED = ISEED + 3277
  40   CONTINUE
       B2(1) = 0
