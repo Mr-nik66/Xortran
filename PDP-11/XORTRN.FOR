@@ -18,7 +18,7 @@ C
       COMMON /LAYER/ Z1, A1, Z2, A2
 C
 C     CONSTANTS
-      EPOCHS = 500
+      EPOCHS = 100
       SAMPLES = 4
       EXPLIM = 10
       LR = 0.5
@@ -80,19 +80,18 @@ C     TRAINING LOOP
               DB1(I) = DB1(I) / 4.0
    30     CONTINUE
           DB2(1) = DB2(1) / 4.0
-C          IF (EPOCH .GT. 350) GOTO 202
-C          IF (EPOCH .GT. 100) GOTO 201
-C          LR = 0.5
+C          IF (EPOCH .EQ. 76) GOTO 202
+C          IF (EPOCH .EQ. 80) GOTO 201
 C          GOTO 203
-C 201      LR = 0.1
+C 201      LR = 0.3
 C          GOTO 203
 C 202      LR = 0.01
  203      CALL UPDATE(DW1, DW2, DB1, DB2, LR)
           LOSS = LOSS / FLOAT(SAMPLES)
           IF (EPOCH .EQ. 1.0) GOTO 204
-          IF (AMOD(FLOAT(EPOCH), 100.0) .NE. 0.0) GOTO 205
- 204        WRITE(7,9001) EPOCH, LOSS, LR
+          IF (AMOD(FLOAT(EPOCH), 20.0) .NE. 0.0) GOTO 205
             LR = LR * 0.85
+ 204        WRITE(7,9001) EPOCH, LOSS, LR
  205      CONTINUE
  100  CONTINUE
       WRITE(7, 9002)
@@ -100,6 +99,7 @@ C 202      LR = 0.01
         CALL FORWRD(ISAMPLE)
         ITMP1 = NINT(INPUTS(ISAMPLE,1))
         ITMP2 = NINT(INPUTS(ISAMPLE,2))
+C GET ABSOLUTE VALUE IN CASE OF ROUNDING ERROR NEAR 0.00
         RTMP1 = A2(1)
         RTMP2 = TARGETS(ISAMPLE,1)
         WRITE(7, 9003) ITMP1, ITMP2, RTMP1, RTMP2
@@ -242,7 +242,7 @@ C     LAYER 2
 C     BIAS
       Z2(1) = Z2(1) + B2(1)
 C     ACTIVATION
-      A2(1) = TANHAC(Z2(1))
+      A2(1) = RELU(Z2(1))
       RETURN
       END
 C
@@ -258,7 +258,7 @@ C UPDATE
       B2(1) = B2(1) + LR * DB2(1)
       DO 20 I = 1, 2
           DO 30 J = 1, 4
-              W1(I,J) = W1(I,J) + LR * DW1(J,I)
+              W1(I,J) = W1(I,J) + LR * DW1(I,J)
  30       CONTINUE
  20   CONTINUE
       DO 40 I = 1, 4

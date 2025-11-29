@@ -28,16 +28,18 @@ C     BATCH SIZE
       SMPLS = 4
 C
       ERR = 0.
-      EPCHS = 500
+      EPCHS = 100
 C FMT
- 9000 FORMAT('EPOCH',I4, ' LOSS ', F14.12, ' LR ', F8.6)
- 9001 FORMAT(' ')
- 9002 FORMAT(2I2, 1X, 'GOT:', F8.6, ' EXPECTED:', F2.0)
+9000  FORMAT(' EPOCH   LOSS(MSE)      LR')
+9001  FORMAT(I5, ' ', F14.12, ' ', F8.6)
+9002  FORMAT(' ')
+9003  FORMAT (I2, I2, ' GOT:', F9.6, ' EXPECTED:', F2.0)
 C
       CALL INIT
 C
 C *** TRAINING LOOP ***
 C
+      WRITE(1, 9000)
       DO 100 EPOCH = 1, EPCHS
           LOSS = 0.0
 C RESET GRADIENT          
@@ -85,23 +87,23 @@ C MEAN SQUARE ERROR
 C          
 C TRAINING STATUS
           IF (EPOCH - 1.0) 204, 205, 204
- 204      M = IMOD(EPOCH, 100)
+ 204      M = IMOD(EPOCH, 20)
           IF (M - 0) 206, 205, 206
  205      CONTINUE
+          WRITE(1,9001) EPOCH, LOSS, R
           R = R * 0.85
-          WRITE(1,9000) EPOCH, LOSS, R
  206      CONTINUE
  100  CONTINUE
 C 
 C TRAINING DONE
-      WRITE(1, 9001)
+      WRITE(1, 9002)
       DO 600 SMPL = 1, SMPLS
         CALL FORWD(SMPL)
         ITMP1 = NINT(XIN(SMPL,1))
         ITMP2 = NINT(XIN(SMPL,2))
         RTMP1 = A2(1)
         RTMP2 = TRGT(SMPL,1)
-        WRITE(1, 9002) ITMP1, ITMP2, RTMP1, RTMP2
+        WRITE(1, 9003) ITMP1, ITMP2, RTMP1, RTMP2
  600  CONTINUE
       STOP
       END
@@ -124,6 +126,7 @@ C DEBUG
  9000 FORMAT ('W1(', I1, ',',I1,')', F16.12)
  9001 FORMAT ('W2(', I1, ')  ', F16.12)
  9002 FORMAT ('SEED' I8) 
+ 9003 FORMAT (F14.12)
 C INIT INPUT AND OUTPUT NEURONS
       XIN(1,1) = 0.
       XIN(1,2) = 0.
@@ -146,8 +149,9 @@ C
           DO 20 J = 1, 4
 C             COULD BE CALLED AN RNG...
               RND = FLOAT(IMOD(ISEED*7+1, 32767)) / 32767.
-              W1(I,J) = (RND - 0.25) * 2.0 * HSCL1
+              W1(I,J) = (RND - 0.5) * 4.0 * HSCL1
               ISEED = ISEED + 3277
+C              WRITE(1, 9003) W1(I,J)
  20       CONTINUE
  10   CONTINUE
       DO 30 I = 1, 4
@@ -157,7 +161,7 @@ C
       ISEED = 883
       DO 40 I = 1, 4
            RND = FLOAT(IMOD(ISEED*7+1, 32767)) / 32767.
-           W2(I,1) = (RND - 0.25) * 2.0 * HSCL2
+           W2(I,1) = (RND - 0.5) * 4.0 * HSCL2
            ISEED = ISEED + 3277
  40   CONTINUE
       B2(1) = 0
@@ -207,7 +211,7 @@ C HIDDEN -> OUTPUT ACTIVATIONS
 C     BIAS
       Z2(1) = Z2(1) + B2(1)
 C     ACTIVATION
-      A2(1) = TANH(Z2(1))
+      A2(1) = RELU(Z2(1))
       RETURN
       END
 C
@@ -230,7 +234,7 @@ C
       B2(1) = B2(1) + R * DB2(1)
       DO 20 I = 1, 2
           DO 30 J = 1, 4
-              W1(I,J) = W1(I,J) + R * DW1(J,I)
+              W1(I,J) = W1(I,J) + R * DW1(I,J)
  30       CONTINUE
  20   CONTINUE
       DO 40 I = 1, 4
